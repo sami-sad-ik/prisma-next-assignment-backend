@@ -24,18 +24,29 @@ model User {
   sessions      Session[]
   accounts      Account[]
 
-  role          String?        @default("STUDENT")
-  status        String?        @default("ACTIVE")
-  tutorProfiles TutorProfile[]
+  role          String?       @default("STUDENT")
+  status        String?       @default("ACTIVE")
+  tutorProfiles TutorProfile?
 
   @@unique([email])
   @@map("user")
 }
 
 model TutorProfile {
-  id     String @id @default(uuid())
-  userId String
-  user   User   @relation(fields: [userId], references: [id])
+  id         String     @id @default(uuid())
+  userId     String     @unique
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  bio        String
+  hourlyRate Float
+  categories Category[] @relation("TutorCategories")
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+}
+
+model Category {
+  id            String         @id @default(uuid())
+  name          String         @unique
+  tutorProfiles TutorProfile[] @relation("TutorCategories")
 }
 
 model Session {

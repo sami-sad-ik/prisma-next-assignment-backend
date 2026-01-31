@@ -24,10 +24,18 @@ model User {
   sessions      Session[]
   accounts      Account[]
 
-  role String? @default("STUDENT")
+  role          String?        @default("STUDENT")
+  status        String?        @default("ACTIVE")
+  tutorProfiles TutorProfile[]
 
   @@unique([email])
   @@map("user")
+}
+
+model TutorProfile {
+  id     String @id @default(uuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
 }
 
 model Session {
@@ -76,4 +84,10 @@ model Verification {
 
   @@index([identifier])
   @@map("verification")
+}
+
+enum role {
+  STUDENT
+  TUTOR
+  ADMIN
 }

@@ -9,6 +9,7 @@ export const auth = betterAuth({
   }),
   emailAndPassword: {
     enabled: true,
+    autoSignIn: true,
   },
   trustedOrigins: [process.env.APP_URL!],
   user: {
@@ -16,6 +17,11 @@ export const auth = betterAuth({
       role: {
         type: "string",
         defaultValue: "STUDENT",
+        required: false,
+      },
+      status: {
+        type: "string",
+        defaultValue: "ACTIVE",
         required: false,
       },
     },

@@ -16,3 +16,21 @@ export const role = {
 } as const
 
 export type role = (typeof role)[keyof typeof role]
+
+
+export const userStatus = {
+  ACTIVE: 'ACTIVE',
+  BANNED: 'BANNED'
+} as const
+
+export type userStatus = (typeof userStatus)[keyof typeof userStatus]
+
+
+export const BookingStatus = {
+  PENDING: 'PENDING',
+  CONFIRMED: 'CONFIRMED',
+  COMPLETED: 'COMPLETED',
+  CANCELLED: 'CANCELLED'
+} as const
+
+export type BookingStatus = (typeof BookingStatus)[keyof typeof BookingStatus]

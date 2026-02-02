@@ -33,6 +33,21 @@ export type TutorProfile = Prisma.TutorProfileModel
  */
 export type Category = Prisma.CategoryModel
 /**
+ * Model Availability
+ * 
+ */
+export type Availability = Prisma.AvailabilityModel
+/**
+ * Model Booking
+ * 
+ */
+export type Booking = Prisma.BookingModel
+/**
+ * Model Review
+ * 
+ */
+export type Review = Prisma.ReviewModel
+/**
  * Model Session
  * 
  */

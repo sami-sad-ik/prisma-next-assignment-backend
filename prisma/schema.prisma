@@ -24,29 +24,85 @@ model User {
   sessions      Session[]
   accounts      Account[]
 
-  role          String?       @default("STUDENT")
-  status        String?       @default("ACTIVE")
-  tutorProfiles TutorProfile?
+  role         role          @default(STUDENT)
+  status       userStatus    @default(ACTIVE)
+  tutorProfile TutorProfile?
+  bookings     Booking[]     @relation("StudentBookings")
+  reviews      Review[]
 
   @@unique([email])
   @@map("user")
 }
 
 model TutorProfile {
-  id         String     @id @default(uuid())
-  userId     String     @unique
-  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  bio        String
-  hourlyRate Float
-  categories Category[] @relation("TutorCategories")
-  createdAt  DateTime   @default(now())
-  updatedAt  DateTime   @updatedAt
+  id             String         @id @default(uuid())
+  userId         String         @unique
+  user           User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  bio            String
+  hourlyRate     Float
+  categories     Category[]     @relation("TutorCategories")
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  availabilities Availability[]
+  bookings       Booking[]
+  reviews        Review[]
 }
 
 model Category {
   id            String         @id @default(uuid())
   name          String         @unique
   tutorProfiles TutorProfile[] @relation("TutorCategories")
+}
+
+model Availability {
+  id             String       @id @default(uuid())
+  tutorProfileId String
+  tutorProfile   TutorProfile @relation(fields: [tutorProfileId], references: [id], onDelete: Cascade)
+  startTime      DateTime
+  endTime        DateTime
+  isBooked       Boolean      @default(false)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  booking        Booking?
+
+  @@index([tutorProfileId])
+}
+
+model Booking {
+  id String @id @default(uuid())
+
+  studentId String
+  student   User   @relation("StudentBookings", fields: [studentId], references: [id])
+
+  tutorProfileId String
+  tutorProfile   TutorProfile @relation(fields: [tutorProfileId], references: [id])
+
+  availabilityId String       @unique
+  availability   Availability @relation(fields: [availabilityId], references: [id])
+
+  status BookingStatus @default(PENDING)
+
+  review Review?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Review {
+  id      String  @id @default(uuid())
+  rating  Int
+  comment String? @db.Text
+
+  studentId String
+  student   User   @relation(fields: [studentId], references: [id])
+
+  tutorProfileId String
+  tutorProfile   TutorProfile @relation(fields: [tutorProfileId], references: [id])
+
+  bookingId String  @unique
+  booking   Booking @relation(fields: [bookingId], references: [id])
+
+  createdAt DateTime @default(now())
 }
 
 model Session {
@@ -101,4 +157,16 @@ enum role {
   STUDENT
   TUTOR
   ADMIN
+}
+
+enum userStatus {
+  ACTIVE
+  BANNED
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  COMPLETED
+  CANCELLED
 }

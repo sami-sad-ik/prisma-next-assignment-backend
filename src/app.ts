@@ -2,6 +2,7 @@ import express from "express";
 import { toNodeHandler } from "better-auth/node";
 import { auth } from "./lib/auth";
 import cors from "cors";
+import { userRoute } from "./Modules/User/user.route";
 
 const app = express();
 
@@ -12,5 +13,7 @@ app.use(
     origin: [process.env.APP_URL!],
   }),
 );
+
+app.use("/api/user", userRoute);
 
 export default app;

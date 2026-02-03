@@ -80,7 +80,7 @@ model Booking {
   availabilityId String       @unique
   availability   Availability @relation(fields: [availabilityId], references: [id])
 
-  status BookingStatus @default(PENDING)
+  status BookingStatus @default(CONFIRMED)
 
   review Review?
 
@@ -165,7 +165,6 @@ enum userStatus {
 }
 
 enum BookingStatus {
-  PENDING
   CONFIRMED
   COMPLETED
   CANCELLED

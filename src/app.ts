@@ -4,6 +4,7 @@ import { auth } from "./lib/auth";
 import cors from "cors";
 import { userRoute } from "./Modules/User/user.route";
 import { availabilityRoute } from "./Modules/Availability/availability.route";
+import { bookingRoute } from "./Modules/Booking/booking.route";
 
 const app = express();
 
@@ -17,5 +18,6 @@ app.use(
 
 app.use("/api/user", userRoute);
 app.use("/api/tutor/availability", availabilityRoute);
+app.use("/api/bookings", bookingRoute);
 
 export default app;

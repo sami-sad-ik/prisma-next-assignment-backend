@@ -14,9 +14,9 @@ const setAvailability: RequestHandler = async (req, res) => {
       message: "Availability set successfully",
       data: result,
     });
-  } catch (err) {
+  } catch (err: any) {
     res.status(500).json({
-      err: "Failed to set availability",
+      message: err.message || "Failed to set availability",
     });
   }
 };

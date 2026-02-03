@@ -27,7 +27,6 @@ export type userStatus = (typeof userStatus)[keyof typeof userStatus]
 
 
 export const BookingStatus = {
-  PENDING: 'PENDING',
   CONFIRMED: 'CONFIRMED',
   COMPLETED: 'COMPLETED',
   CANCELLED: 'CANCELLED'

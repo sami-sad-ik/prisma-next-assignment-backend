@@ -18,7 +18,7 @@ const becomeTutor: RequestHandler = async (req, res) => {
       data: result,
     });
   } catch (error) {
-    res.status(500).json({ error: "Failed to become tutor" });
+    res.status(500).json({ error: "Failed to become tutor!" });
   }
 };
 

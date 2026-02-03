@@ -31,6 +31,14 @@ const authMiddleware = (...roles: any) => {
         email: session.user.email,
         role: session.user.role as any,
       };
+
+      if (roles.length > 0 && !roles.includes(session.user.role)) {
+        return res.status(403).json({
+          success: false,
+          message:
+            "Forbidden: You do not have permission to access this resource.",
+        });
+      }
       next();
     } catch (err) {
       return res.status(500).json({

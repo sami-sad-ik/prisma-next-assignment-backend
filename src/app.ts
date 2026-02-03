@@ -3,6 +3,7 @@ import { toNodeHandler } from "better-auth/node";
 import { auth } from "./lib/auth";
 import cors from "cors";
 import { userRoute } from "./Modules/User/user.route";
+import { availabilityRoute } from "./Modules/Availability/availability.route";
 
 const app = express();
 
@@ -15,5 +16,6 @@ app.use(
 );
 
 app.use("/api/user", userRoute);
+app.use("/api/tutor/availability", availabilityRoute);
 
 export default app;

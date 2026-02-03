@@ -6,6 +6,7 @@ const becomeTutor: RequestHandler = async (req, res) => {
     const userId = req.user!.id;
     const data = req.body;
     const { bio, hourlyRate, categoryIds } = data;
+
     const result = await userService.becomeTutor(userId, {
       bio,
       hourlyRate,
@@ -17,7 +18,7 @@ const becomeTutor: RequestHandler = async (req, res) => {
       data: result,
     });
   } catch (error) {
-    res.status(500).json({ error: "Failed to upgrade profile" });
+    res.status(500).json({ error: "Failed to become tutor" });
   }
 };
 

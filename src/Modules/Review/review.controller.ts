@@ -1,0 +1,27 @@
+import { RequestHandler } from "express";
+import { reviewService } from "./review.service";
+
+const postReview: RequestHandler = (req, res) => {
+  try {
+    const studentId = req.user!.id;
+    const { bookingId, rating, comment } = req.body;
+    const result = reviewService.postReview(
+      studentId,
+      bookingId,
+      rating,
+      comment,
+    );
+    res.status(201).json({
+      success: true,
+      message: "Successfully Reviewed this session",
+      data: result,
+    });
+  } catch (err: any) {
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+};
+
+export const reviewController = { postReview };

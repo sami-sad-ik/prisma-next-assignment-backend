@@ -262,7 +262,7 @@ export type AvailabilityCreateInput = {
   isBooked?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  tutorProfile: Prisma.TutorProfileCreateNestedOneWithoutAvailabilitiesInput
+  tutorProfile: Prisma.TutorProfileCreateNestedOneWithoutAvailabilityInput
   booking?: Prisma.BookingCreateNestedOneWithoutAvailabilityInput
 }
 
@@ -284,7 +284,7 @@ export type AvailabilityUpdateInput = {
   isBooked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  tutorProfile?: Prisma.TutorProfileUpdateOneRequiredWithoutAvailabilitiesNestedInput
+  tutorProfile?: Prisma.TutorProfileUpdateOneRequiredWithoutAvailabilityNestedInput
   booking?: Prisma.BookingUpdateOneWithoutAvailabilityNestedInput
 }
 
@@ -495,7 +495,7 @@ export type AvailabilityCreateWithoutBookingInput = {
   isBooked?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  tutorProfile: Prisma.TutorProfileCreateNestedOneWithoutAvailabilitiesInput
+  tutorProfile: Prisma.TutorProfileCreateNestedOneWithoutAvailabilityInput
 }
 
 export type AvailabilityUncheckedCreateWithoutBookingInput = {
@@ -531,7 +531,7 @@ export type AvailabilityUpdateWithoutBookingInput = {
   isBooked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  tutorProfile?: Prisma.TutorProfileUpdateOneRequiredWithoutAvailabilitiesNestedInput
+  tutorProfile?: Prisma.TutorProfileUpdateOneRequiredWithoutAvailabilityNestedInput
 }
 
 export type AvailabilityUncheckedUpdateWithoutBookingInput = {

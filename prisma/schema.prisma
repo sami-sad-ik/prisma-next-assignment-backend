@@ -35,17 +35,17 @@ model User {
 }
 
 model TutorProfile {
-  id             String         @id @default(uuid())
-  userId         String         @unique
-  user           User           @relation(fields: [userId], references: [id], onDelete: Cascade)
-  bio            String
-  hourlyRate     Float
-  categories     Category[]     @relation("TutorCategories")
-  createdAt      DateTime       @default(now())
-  updatedAt      DateTime       @updatedAt
-  availabilities Availability[]
-  bookings       Booking[]
-  reviews        Review[]
+  id           String         @id @default(uuid())
+  userId       String         @unique
+  user         User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  bio          String
+  hourlyRate   Float
+  categories   Category[]     @relation("TutorCategories")
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  availability Availability[]
+  bookings     Booking[]
+  reviews      Review[]
 }
 
 model Category {

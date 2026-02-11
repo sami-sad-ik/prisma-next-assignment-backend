@@ -32,4 +32,21 @@ const postBooking = async (studentId: string, availabilityId: string) => {
   });
 };
 
-export const bookingService = { postBooking };
+const getAllBookings = async () => {
+  const bookings = await prisma.booking.findMany({
+    include: {
+      student: { select: { name: true, email: true } },
+      tutorProfile: {
+        include: { user: { select: { name: true, email: true } } },
+      },
+      availability: {
+        select: { startTime: true, endTime: true },
+      },
+    },
+    orderBy: { createdAt: "desc" },
+  });
+
+  return bookings;
+};
+
+export const bookingService = { postBooking, getAllBookings };

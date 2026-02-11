@@ -9,5 +9,6 @@ router.post(
   authMiddleware("STUDENT", "TUTOR"),
   bookingController.postBooking,
 );
+router.get("/", authMiddleware("ADMIN"), bookingController.getAllBookings);
 
 export const bookingRoute = router;

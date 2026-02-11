@@ -22,4 +22,49 @@ const becomeTutor: RequestHandler = async (req, res) => {
   }
 };
 
-export const userController = { becomeTutor };
+const getAllUsers: RequestHandler = async (req, res) => {
+  try {
+    const result = await userService.getAllUsers();
+
+    res.status(200).json({
+      success: true,
+      message: "Users retrieved successfully",
+      data: result,
+    });
+  } catch (err: any) {
+    res.status(500).json({
+      success: false,
+      message: err.message || "Something went wrong",
+    });
+  }
+};
+
+const toggleUserStatus: RequestHandler = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const { newStatus } = req.body;
+
+    if (!newStatus) {
+      return res.status(400).json({
+        success: false,
+        message: "newStatus is required (e.g., 'ACTIVE' or 'BLOCKED')",
+      });
+    }
+
+    const result = await userService.toggleUserStatus(id as string, newStatus);
+
+    res.status(200).json({
+      success: true,
+      message: `User status updated to ${newStatus} successfully`,
+      data: result,
+    });
+  } catch (err: any) {
+    res.status(500).json({
+      success: false,
+      message: err.message || "Something went wrong",
+    });
+  }
+};
+
+export const userController = { becomeTutor, getAllUsers, toggleUserStatus };

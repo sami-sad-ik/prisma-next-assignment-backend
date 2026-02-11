@@ -54,4 +54,79 @@ const getSpecificTutor = async (tutorId: string) => {
   };
 };
 
-export const tutorService = { getTutors, getSpecificTutor };
+const getFeaturedTutors = async () => {
+  const featured = await prisma.tutorProfile.findMany({
+    where: { isFeatured: true },
+    take: 4,
+    select: {
+      id: true,
+      hourlyRate: true,
+      user: { select: { name: true } },
+      reviews: { select: { rating: true } },
+    },
+  });
+  return featured.map((tutor) => {
+    const total = tutor.reviews.length;
+    const avg =
+      total > 0 ? tutor.reviews.reduce((a, b) => a + b.rating, 0) / total : 0;
+    return { ...tutor, avgRating: Number(avg.toFixed(1)), totalReviews: total };
+  });
+};
+
+const getTeachingSessions = async (tutorId: string) => {
+  return await prisma.booking.findMany({
+    where: {
+      tutorProfile: { userId: tutorId },
+    },
+    include: {
+      student: {
+        select: {
+          name: true,
+          email: true,
+        },
+      },
+      availability: {
+        select: {
+          startTime: true,
+          endTime: true,
+        },
+      },
+    },
+    orderBy: {
+      availability: {
+        startTime: "desc",
+      },
+    },
+  });
+};
+
+const getTutorReviews = async (tutorId: string) => {
+  const reviews = await prisma.review.findMany({
+    where: {
+      tutorProfile: { userId: tutorId },
+    },
+    select: {
+      id: true,
+      rating: true,
+      comment: true,
+      createdAt: true,
+      student: {
+        select: {
+          name: true,
+        },
+      },
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+  return reviews;
+};
+
+export const tutorService = {
+  getTutors,
+  getSpecificTutor,
+  getFeaturedTutors,
+  getTeachingSessions,
+  getTutorReviews,
+};

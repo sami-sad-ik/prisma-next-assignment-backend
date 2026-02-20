@@ -9,5 +9,15 @@ router.post(
   authMiddleware("TUTOR"),
   availabilityController.setAvailability,
 );
+router.get(
+  "/",
+  authMiddleware("TUTOR"),
+  availabilityController.getAvailability,
+);
+router.delete(
+  "/:id",
+  authMiddleware("TUTOR"),
+  availabilityController.deleteAbility,
+);
 
 export const availabilityRoute = router;

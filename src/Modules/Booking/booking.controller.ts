@@ -33,4 +33,62 @@ const getAllBookings: RequestHandler = async (req, res) => {
   }
 };
 
-export const bookingController = { postBooking, getAllBookings };
+const getTutorSessions: RequestHandler = async (req, res) => {
+  try {
+    const userId = req.user!.id;
+    const result = await bookingService.getAllBookingsFromDB(userId);
+    res.status(200).json({
+      success: true,
+      message: "Successfully retrieved all bookings",
+      data: result,
+    });
+  } catch (err: any) {
+    res.status(500).json({
+      message: err.message || "Booking failed",
+    });
+  }
+};
+
+const completeSession: RequestHandler = async (req, res) => {
+  try {
+    const tutorId = req.params.id;
+    const result = await bookingService.completeSessionByTutor(
+      tutorId as string,
+    );
+    res.status(201).json({
+      success: true,
+      message: "Successfully completed the session",
+      data: result,
+    });
+  } catch (err: any) {
+    res.status(500).json({
+      message: err.message || "Completion failed",
+    });
+  }
+};
+
+const cancelSession: RequestHandler = async (req, res) => {
+  try {
+    const tutorId = req.params.id;
+    const result = await bookingService.completeSessionByTutor(
+      tutorId as string,
+    );
+    res.status(201).json({
+      success: true,
+      message: "Successfully cancelled the session",
+      data: result,
+    });
+  } catch (err: any) {
+    res.status(500).json({
+      message: err.message || "Cancellation failed",
+    });
+  }
+};
+
+export const bookingController = {
+  postBooking,
+  getAllBookings,
+  getTutorSessions,
+  completeSession,
+  cancelSession,
+};

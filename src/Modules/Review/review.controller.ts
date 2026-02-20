@@ -24,4 +24,21 @@ const postReview: RequestHandler = (req, res) => {
   }
 };
 
-export const reviewController = { postReview };
+const getTutorReviews: RequestHandler = async (req, res) => {
+  try {
+    const userId = req.user!.id;
+    const result = await reviewService.getTutorReviewsFromDB(userId);
+    res.status(200).json({
+      success: true,
+      message: "Successfully retrieved all the reviews",
+      data: result,
+    });
+  } catch (err: any) {
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+};
+
+export const reviewController = { postReview, getTutorReviews };

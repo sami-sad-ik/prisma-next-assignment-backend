@@ -33,4 +33,12 @@ const postReview = async (
   return review;
 };
 
-export const reviewService = { postReview };
+const getTutorReviewsFromDB = async (userId: string) => {
+  const result = await prisma.review.findMany({
+    where: { tutorProfile: { userId } },
+    include: { student: { select: { name: true } } },
+  });
+  return result;
+};
+
+export const reviewService = { postReview, getTutorReviewsFromDB };

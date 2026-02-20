@@ -11,13 +11,15 @@ import { categoryRoute } from "./Modules/Category/category.route";
 
 const app = express();
 
-app.all("/api/auth/*splat", toNodeHandler(auth));
-app.use(express.json());
 app.use(
   cors({
     origin: [process.env.APP_URL!],
+    credentials: true,
   }),
 );
+app.use(express.json());
+
+app.all("/api/auth/*splat", toNodeHandler(auth));
 
 app.use("/api/user", userRoute);
 app.use("/api/tutor/availability", availabilityRoute);

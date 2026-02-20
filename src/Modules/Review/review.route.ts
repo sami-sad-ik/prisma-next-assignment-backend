@@ -10,4 +10,6 @@ router.post(
   reviewController.postReview,
 );
 
+router.get("/", authMiddleware("TUTOR"), reviewController.getTutorReviews);
+
 export const reviewRouter = router;

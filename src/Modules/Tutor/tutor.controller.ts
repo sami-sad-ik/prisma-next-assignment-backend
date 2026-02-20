@@ -23,7 +23,7 @@ const getSpecificTutor: RequestHandler = async (req, res) => {
     const result = await tutorService.getSpecificTutor(id as string);
     res.status(200).json({
       success: true,
-      message: "Tutor details fetched successfullty",
+      message: "Tutor details fetched successfully",
       data: result,
     });
   } catch (err: any) {
@@ -39,7 +39,7 @@ const getFeaturedTutor: RequestHandler = async (req, res) => {
     const result = await tutorService.getFeaturedTutors();
     res.status(200).json({
       success: true,
-      message: "Featured tutors fetched successfullty",
+      message: "Featured tutors fetched successfully",
       data: result,
     });
   } catch (err: any) {
@@ -84,10 +84,50 @@ const getTutorReviews: RequestHandler = async (req, res) => {
   }
 };
 
+const getTutorProfile: RequestHandler = async (req, res) => {
+  try {
+    const id = req.user!.id;
+    const result = await tutorService.getTutorProfileByUserId(id);
+    res.status(200).json({
+      success: true,
+      message: "Tutor profile fetched successfully",
+      data: result,
+    });
+  } catch (err: any) {
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+};
+
+const updateTutorProfile: RequestHandler = async (req, res) => {
+  try {
+    const userId = req.user!.id;
+    const data = req.body;
+
+    const result = await tutorService.updateTutorProfileInDB(userId, data);
+
+    res.status(200).json({
+      success: true,
+      message: "Profile updated successfully",
+      data: result,
+    });
+  } catch (error: any) {
+    console.error("Update Error:", error);
+    res.status(500).json({
+      success: false,
+      message: error.message || "Failed to update profile",
+    });
+  }
+};
+
 export const tutorController = {
   getTutors,
   getSpecificTutor,
   getFeaturedTutor,
   getTeachingSessions,
   getTutorReviews,
+  getTutorProfile,
+  updateTutorProfile,
 };

@@ -18,4 +18,19 @@ const createCategory: RequestHandler = async (req, res) => {
   }
 };
 
-export const categoryController = { createCategory };
+const getCategories: RequestHandler = async (req, res) => {
+  try {
+    const result = await categoryService.getCategoriesFromDB();
+    res.status(200).json({
+      success: true,
+      message: "Successfully retrieved all categories",
+      data: result,
+    });
+  } catch (err: any) {
+    res.status(500).json({
+      message: err.message || "Failed to retrieve categories!",
+    });
+  }
+};
+
+export const categoryController = { createCategory, getCategories };

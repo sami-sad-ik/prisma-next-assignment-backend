@@ -49,4 +49,103 @@ const getAllBookings = async () => {
   return bookings;
 };
 
-export const bookingService = { postBooking, getAllBookings };
+const getAllBookingsFromDB = async (userId: string) => {
+  const sessions = await prisma.booking.findMany({
+    where: {
+      tutorProfile: { userId },
+    },
+    include: {
+      student: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+        },
+      },
+      availability: {
+        select: {
+          startTime: true,
+          endTime: true,
+        },
+      },
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+
+  return sessions;
+};
+
+const completeSessionByTutor = async (bookingId: string) => {
+  return await prisma.$transaction(async (tx) => {
+    const booking = await tx.booking.findUnique({
+      where: { id: bookingId },
+      include: { availability: true },
+    });
+
+    if (!booking) {
+      throw new Error("Booking not found");
+    }
+
+    if (booking.status !== "CONFIRMED") {
+      throw new Error("Only confirmed sessions can be completed");
+    }
+
+    // // optional but recommended
+    // const now = new Date();
+    // if (now < booking.availability.endTime) {
+    //   throw new Error("Session time has not ended yet");
+    // }
+
+    const updated = await tx.booking.update({
+      where: { id: bookingId },
+      data: {
+        status: "COMPLETED",
+      },
+    });
+    return updated;
+  });
+};
+
+const cancelSessionByTutor = async (bookingId: string) => {
+  return await prisma.$transaction(async (tx) => {
+    const booking = await tx.booking.findUnique({
+      where: { id: bookingId },
+    });
+
+    if (!booking) {
+      throw new Error("Booking not found");
+    }
+
+    if (booking.status === "COMPLETED") {
+      throw new Error("Completed session cannot be cancelled");
+    }
+
+    if (booking.status === "CANCELLED") {
+      throw new Error("Session already cancelled");
+    }
+
+    const cancelledBooking = await tx.booking.update({
+      where: { id: bookingId },
+      data: {
+        status: "CANCELLED",
+      },
+    });
+
+    await tx.availability.update({
+      where: { id: booking.availabilityId },
+      data: { isBooked: false },
+    });
+
+    return cancelledBooking;
+  });
+};
+
+export const bookingService = {
+  postBooking,
+  getAllBookings,
+  getAllBookingsFromDB,
+  completeSessionByTutor,
+  cancelSessionByTutor,
+};

@@ -10,5 +10,20 @@ router.post(
   bookingController.postBooking,
 );
 router.get("/", authMiddleware("ADMIN"), bookingController.getAllBookings);
+router.get(
+  "/sessions",
+  authMiddleware("TUTOR"),
+  bookingController.getTutorSessions,
+);
+router.patch(
+  "/complete/:id",
+  authMiddleware("TUTOR"),
+  bookingController.completeSession,
+);
+router.patch(
+  "/cancel/:id",
+  authMiddleware("TUTOR"),
+  bookingController.cancelSession,
+);
 
 export const bookingRoute = router;

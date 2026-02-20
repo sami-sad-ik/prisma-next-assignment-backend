@@ -61,6 +61,7 @@ const getFeaturedTutors = async () => {
     select: {
       id: true,
       hourlyRate: true,
+      bio: true,
       user: { select: { name: true } },
       reviews: { select: { rating: true } },
     },
@@ -69,7 +70,14 @@ const getFeaturedTutors = async () => {
     const total = tutor.reviews.length;
     const avg =
       total > 0 ? tutor.reviews.reduce((a, b) => a + b.rating, 0) / total : 0;
-    return { ...tutor, avgRating: Number(avg.toFixed(1)), totalReviews: total };
+    return {
+      id: tutor.id,
+      name: tutor.user.name,
+      bio: tutor.bio,
+      hourlyRate: tutor.hourlyRate,
+      avgRating: Number(avg.toFixed(1)),
+      totalReviews: total,
+    };
   });
 };
 
@@ -123,10 +131,45 @@ const getTutorReviews = async (tutorId: string) => {
   return reviews;
 };
 
+export const getTutorProfileByUserId = async (userId: string) => {
+  const profile = await prisma.tutorProfile.findUnique({
+    where: {
+      userId: userId,
+    },
+    include: {
+      categories: true,
+    },
+  });
+
+  return profile;
+};
+
+const updateTutorProfileInDB = async (userId: string, tutorData: any) => {
+  const updatedProfile = await prisma.tutorProfile.update({
+    where: {
+      userId: userId,
+    },
+    data: {
+      bio: tutorData.bio,
+      hourlyRate: Number(tutorData.hourlyRate),
+      categories: {
+        set: tutorData.categoryIds.map((id: string) => ({ id })),
+      },
+    },
+    include: {
+      categories: true,
+    },
+  });
+
+  return updatedProfile;
+};
+
 export const tutorService = {
   getTutors,
   getSpecificTutor,
   getFeaturedTutors,
   getTeachingSessions,
   getTutorReviews,
+  updateTutorProfileInDB,
+  getTutorProfileByUserId,
 };

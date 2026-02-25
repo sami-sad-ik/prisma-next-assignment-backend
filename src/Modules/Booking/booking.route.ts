@@ -9,11 +9,16 @@ router.post(
   authMiddleware("STUDENT", "TUTOR"),
   bookingController.postBooking,
 );
-router.get("/", authMiddleware("ADMIN"), bookingController.getAllBookings);
+router.get("/all", authMiddleware("ADMIN"), bookingController.getAllBookings);
 router.get(
-  "/sessions",
+  "/tutor-sessions",
   authMiddleware("TUTOR"),
   bookingController.getTutorSessions,
+);
+router.get(
+  "/student",
+  authMiddleware("STUDENT", "TUTOR"),
+  bookingController.getBookingsBySpecificUser,
 );
 router.patch(
   "/complete/:id",

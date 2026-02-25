@@ -1,7 +1,36 @@
+import { TutorProfileWhereInput } from "../../generated/prisma/models";
 import { prisma } from "../../lib/prisma";
 
-const getTutors = async () => {
+const getTutors = async ({
+  search,
+  categoryId,
+}: {
+  search: string | undefined;
+  categoryId: string | undefined;
+}) => {
+  const andConditions: TutorProfileWhereInput[] = [];
+  if (search) {
+    andConditions.push({
+      OR: [
+        { user: { name: { contains: search, mode: "insensitive" } } },
+        { bio: { contains: search, mode: "insensitive" } },
+      ],
+    });
+  }
+
+  if (categoryId) {
+    andConditions.push({
+      categories: {
+        some: { id: categoryId },
+      },
+    });
+  }
+
+  const whereConditions =
+    andConditions.length > 0 ? { AND: andConditions } : {};
+
   const tutors = await prisma.tutorProfile.findMany({
+    where: whereConditions,
     include: {
       user: { select: { name: true } },
       reviews: { select: { rating: true } },

@@ -36,7 +36,7 @@ const getAllBookings: RequestHandler = async (req, res) => {
 const getTutorSessions: RequestHandler = async (req, res) => {
   try {
     const userId = req.user!.id;
-    const result = await bookingService.getAllBookingsFromDB(userId);
+    const result = await bookingService.getTutorSessions(userId);
     res.status(200).json({
       success: true,
       message: "Successfully retrieved all bookings",
@@ -85,10 +85,27 @@ const cancelSession: RequestHandler = async (req, res) => {
   }
 };
 
+const getBookingsBySpecificUser: RequestHandler = async (req, res) => {
+  try {
+    const studentId = req.user!.id;
+    const result = await bookingService.getBookingsByUser(studentId);
+    res.status(200).json({
+      success: true,
+      message: "Successfully retrieved all bookings",
+      data: result,
+    });
+  } catch (err: any) {
+    res.status(500).json({
+      message: err.message || "Failed to retrieve bookings",
+    });
+  }
+};
+
 export const bookingController = {
   postBooking,
   getAllBookings,
   getTutorSessions,
   completeSession,
   cancelSession,
+  getBookingsBySpecificUser,
 };

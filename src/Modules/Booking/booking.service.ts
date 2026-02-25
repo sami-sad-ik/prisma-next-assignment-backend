@@ -34,10 +34,17 @@ const postBooking = async (studentId: string, availabilityId: string) => {
 
 const getAllBookings = async () => {
   const bookings = await prisma.booking.findMany({
-    include: {
-      student: { select: { name: true, email: true } },
+    select: {
+      id: true,
+      status: true,
+      createdAt: true,
+      student: {
+        select: { name: true, email: true },
+      },
       tutorProfile: {
-        include: { user: { select: { name: true, email: true } } },
+        select: {
+          user: { select: { name: true, email: true } },
+        },
       },
       availability: {
         select: { startTime: true, endTime: true },
@@ -45,11 +52,10 @@ const getAllBookings = async () => {
     },
     orderBy: { createdAt: "desc" },
   });
-
   return bookings;
 };
 
-const getAllBookingsFromDB = async (userId: string) => {
+const getTutorSessions = async (userId: string) => {
   const sessions = await prisma.booking.findMany({
     where: {
       tutorProfile: { userId },
@@ -75,6 +81,24 @@ const getAllBookingsFromDB = async (userId: string) => {
   });
 
   return sessions;
+};
+
+const getBookingsByUser = async (studentId: string) => {
+  const bookings = await prisma.booking.findMany({
+    where: {
+      studentId,
+    },
+    include: {
+      availability: { select: { startTime: true, endTime: true } },
+      tutorProfile: { select: { user: { select: { name: true } } } },
+    },
+
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+
+  return bookings;
 };
 
 const completeSessionByTutor = async (bookingId: string) => {
@@ -145,7 +169,8 @@ const cancelSessionByTutor = async (bookingId: string) => {
 export const bookingService = {
   postBooking,
   getAllBookings,
-  getAllBookingsFromDB,
+  getTutorSessions,
   completeSessionByTutor,
   cancelSessionByTutor,
+  getBookingsByUser,
 };

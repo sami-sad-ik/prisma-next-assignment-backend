@@ -43,13 +43,10 @@ const toggleUserStatus = async (
   userId: string,
   newStatus: "ACTIVE" | "BANNED",
 ) => {
-  const user = await prisma.user.findUnique({
-    where: { id: userId },
-  });
-  if (!user) throw new Error("User not found!");
   return await prisma.user.update({
     where: { id: userId },
     data: { status: newStatus },
+    select: { id: true, status: true },
   });
 };
 

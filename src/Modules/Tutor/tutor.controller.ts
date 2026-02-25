@@ -3,7 +3,14 @@ import { tutorService } from "./tutor.service";
 
 const getTutors: RequestHandler = async (req, res) => {
   try {
-    const result = await tutorService.getTutors();
+    const { search, categoryId } = req.query;
+    const searchString = typeof search === "string" ? search : undefined;
+    const categoryIdString =
+      typeof categoryId === "string" ? categoryId : undefined;
+    const result = await tutorService.getTutors({
+      search: searchString,
+      categoryId: categoryIdString,
+    });
     res.status(200).json({
       success: true,
       message: "All tutors fetched successfully",

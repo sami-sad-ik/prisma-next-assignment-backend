@@ -1,4 +1,6 @@
 node_modules
 /generated/prisma
 .env
-vercel.json
+.vercel
+
+.vercel

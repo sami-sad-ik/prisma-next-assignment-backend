@@ -36,7 +36,7 @@ const setAvailability = async (userId: string, data: any) => {
 
 const getAvailability = async (userId: string) => {
   const result = await prisma.availability.findMany({
-    where: { tutorProfile: { userId } },
+    where: { tutorProfile: { userId }, isBooked: false },
     orderBy: { createdAt: "asc" },
   });
   return result;

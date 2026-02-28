@@ -81,7 +81,10 @@ var auth = betterAuth({
     enabled: true,
     autoSignIn: true
   },
-  trustedOrigins: [process.env.APP_URL],
+  trustedOrigins: [
+    process.env.APP_URL || "https://prisma-assignment-server.vercel.app",
+    "http://localhost:3000"
+  ],
   user: {
     additionalFields: {
       role: {
@@ -293,7 +296,7 @@ var setAvailability = async (userId, data) => {
 };
 var getAvailability = async (userId) => {
   const result = await prisma.availability.findMany({
-    where: { tutorProfile: { userId } },
+    where: { tutorProfile: { userId }, isBooked: false },
     orderBy: { createdAt: "asc" }
   });
   return result;
@@ -1174,10 +1177,24 @@ var categoryRoute = router6;
 
 // src/app.ts
 var app = express();
+var allowedOrigins = [
+  process.env.APP_URL || "https://prisma-assignment-server.vercel.app",
+  "http://localhost:3000",
+  "http://localhost:3001"
+  // in case you use different port
+];
 app.use(
   cors({
-    origin: [process.env.APP_URL],
-    credentials: true
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"]
   })
 );
 app.use(express.json());
@@ -1193,6 +1210,7 @@ var app_default = app;
 // src/server.ts
 var port = process.env.PORT || 5e3;
 var main = () => {
+  app_default.set("trust proxy", 1);
   app_default.listen(port, () => console.log(`server is running on port ${port}`));
 };
 main();

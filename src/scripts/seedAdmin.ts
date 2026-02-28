@@ -13,7 +13,7 @@ const seedAdmin = async () => {
     });
     if (existingUser) throw new Error("User already exists!");
     const signupAdmin = await fetch(
-      "http://localhost:5000/api/auth/sign-up/email",
+      `${process.env.BETTER_AUTH_URL}/api/auth/sign-up/email`,
       {
         method: "POST",
         headers: {

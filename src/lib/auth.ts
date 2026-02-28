@@ -11,7 +11,11 @@ export const auth = betterAuth({
     enabled: true,
     autoSignIn: true,
   },
-  trustedOrigins: [process.env.APP_URL!],
+
+  trustedOrigins: [
+    process.env.APP_URL || "https://prisma-assignment-server.vercel.app",
+    "http://localhost:3000",
+  ],
 
   user: {
     additionalFields: {
